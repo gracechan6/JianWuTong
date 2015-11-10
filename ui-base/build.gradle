@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('ui-base-1.1.1.aar'))

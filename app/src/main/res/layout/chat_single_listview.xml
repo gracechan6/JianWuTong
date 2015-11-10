@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/chat_time"
+        android:text="10月09日，周五，22:20"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/hisText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/time"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/chat_left"
+        android:text="下午的会议你安排一下"
+        android:textColor="#000"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/myText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/time"
+        android:background="@drawable/chat_right"
+        android:text="安排到下午三点吧,在第三会议室。"
+        android:textColor="#fff"
+        android:visibility="gone"/>
+</RelativeLayout>

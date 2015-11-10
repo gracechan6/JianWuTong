@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00111111</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+
+    <color name="toolbar_bg">#F7F7F7</color>
+
+    <color name="bottom_text_selected">#B90609</color>
+    <color name="bottom_text">#989898</color>
+    <color name="bottom_bg">#F9F9F9</color>
+
+    <color name="bg">#E5E5E5</color>
+
+    <color name="sj">#E1943D</color>
+    <color name="hs_jb">#78919D</color>
+    <color name="jd_yz">#F65E8D</color>
+    <color name="zh">#F6C226</color>
+    <color name="bl">#FF8E6B</color>
+    <color name="fh">#7DBDDB</color>
+    <color name="yy">#84CCC9</color>
+
+    <color name="listview_divider">#D1DAE7</color>
+    <color name="chat_time">#8E8E93</color>
+
+    <color name="msg_name_color">#3F444B</color>
+    <color name="bg_chat_textView">#FAFAFA</color>
+    <color name="bg_chat_rll">#F8F8F8</color>
+    <color name="bg_btn_send">#858E99</color>
+    <color name="bg_btn_send_selected">#858EA9</color>
+
+    <color name="lsv_selectd">#A7DCB3</color>
+</resources>

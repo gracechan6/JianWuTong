@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <!--<fragment
+        android:id="@+id/toolbarFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:name="com.jinwang.jianwutong.fragment.ToolbarFragment"/>-->
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/actionBar_"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/background_floating_material_dark"
+        />
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:id="@+id/webview_" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srlayout"
+        android:layout_below="@id/toolbarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:visibility="gone">
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/msgLsv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fastScrollEnabled="false"
+            android:clipToPadding="false"
+            android:divider="@color/listview_divider"
+            android:dividerHeight="0.5dp"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <fragment
+        android:id="@+id/bottomFragment"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:name="com.jinwang.jianwutong.fragment.BottomFragment"/>
+
+</RelativeLayout>

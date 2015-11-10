@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <com.jinwangmobile.ui.base.view.CircleImageView
+        android:id="@+id/head"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/portrait_80"
+        app:border_width_="0dp"
+        app:border_color_="@color/transparent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/unread"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/bgred_circle"
+        android:textColor="@color/white"
+        android:text="99+"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:layout_alignRight="@id/head"
+        android:visibility="visible"/>
+
+    <RelativeLayout
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@id/head"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/msg_name_color"
+            android:text="于迪" />
+        <TextView
+            android:id="@+id/branch"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@id/name"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:background="@drawable/textview_border2dp_bgsj"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text="市局"/>
+        <TextView
+            android:id="@+id/latestMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="13sp"
+            android:text="下午会议室开会，请各位准时出席，切勿迟到！"/>
+
+        <TextView
+            android:id="@+id/latestTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="13sp"
+            android:text="3分钟前"/>
+    </RelativeLayout>
+</RelativeLayout>

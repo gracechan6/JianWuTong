@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <!--<fragment
+        android:id="@+id/toolbarFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:name="com.jinwang.jianwutong.fragment.ToolbarFragment"/>-->
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/actionBar_"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/background_floating_material_dark"
+        />
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:id="@+id/webview_" />
+
+</RelativeLayout>
