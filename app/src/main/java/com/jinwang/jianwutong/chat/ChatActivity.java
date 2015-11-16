@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -44,22 +45,32 @@ public class ChatActivity extends Activity {
 
     /*ddpush  params*/
     private Intent startSrv;
+    /*private Handler handler;
+    private Runnable refresher;*/
 
-    @Override
-    protected void onStart() {
+
+    protected void start() {
         super.onStart();
+       // PreferenceUtil.saveChatInfo(getApplicationContext());
         startSrv=new Intent(this,OnlineService.class);
-        startSrv.putExtra("CMD","RESET");
+        startSrv.putExtra("CMD", "RESET");
         this.startService(startSrv);
-        freshCurrentInfo();
+        //freshCurrentInfo();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //
+        /*refresher = new Runnable(){
+            public void run(){
+                ChatActivity.this.freshCurrentInfo();
+            }
+        };
+        handler = new Handler();
+        handler.postDelayed(refresher, 1000);*/
 
         setContentView(R.layout.activity_chat);
+        //start();
         hisName=getIntent().getStringExtra(MainActivity.HISNAME);
         toolbarFragment = (ToolbarFragment) getFragmentManager().findFragmentById(R.id.toolbarFragment);
         toolbarFragment.initToolBar();
@@ -73,11 +84,13 @@ public class ChatActivity extends Activity {
 
     @Override
     protected void onResume() {
+        //freshCurrentInfo();
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
+        //handler.removeCallbacks(refresher);
         super.onDestroy();
     }
 
@@ -88,8 +101,10 @@ public class ChatActivity extends Activity {
     public void doSend(View view){
 
         String text = sendtext.getText().toString();
-        if (text.length()>0)
+        if (text.length()==0) {
+            sendtext.requestFocus();
             return;//未输入内容点击发送，不操作直接返回。
+        }
         /*发送消息*/
         int port;
         try {
@@ -101,8 +116,10 @@ public class ChatActivity extends Activity {
         byte[] uuid = null;
         try {
             uuid = Util.md5Byte(hisName);
+            LogUtil.i("ddpush-hisname:",hisName+"!!!"+uuid.toString());
         }catch (Exception e){
             Toast.makeText(this.getApplicationContext(), "错误："+e.getMessage(), Toast.LENGTH_SHORT).show();
+            //对方名字有误 无法转换
             return;
         }
         byte[] msg = null;
@@ -110,26 +127,29 @@ public class ChatActivity extends Activity {
             msg = text.getBytes("UTF-8");
         } catch (Exception e) {
             Toast.makeText(this.getApplicationContext(), "错误："+e.getMessage(), Toast.LENGTH_SHORT).show();
+            sendtext.requestFocus();
             return;
         }
+
         //推送消息
         new Thread(new DdPushSendTask(this,ChatParams.SERVER_IP,port,uuid,msg)).start();
     }
 
     protected void freshCurrentInfo(){
-        PreferenceUtil.saveChatInfo(getApplicationContext());
+
         String uuid = null;
+        String userName=PreferenceUtil.getName(getApplicationContext());
 
         try {
-            uuid=Util.md5(hisName);
+            uuid=Util.md5(userName);
         } catch (Exception e) {
             uuid="";
         }
-        if(hisName == null || hisName.length() == 0){
+        if(userName == null || userName.length() == 0){
             uuid="";
         }
 
-        LogUtil.i("ddpush",uuid);
+        LogUtil.i("ddpush-me",userName+"!!!"+uuid);
         //刷新界面
         /*try {
             this.findViewById(R.layout.activity_chat).postInvalidate();

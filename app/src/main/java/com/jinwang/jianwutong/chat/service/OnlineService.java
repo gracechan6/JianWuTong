@@ -18,11 +18,14 @@ import android.os.PowerManager.WakeLock;
 import android.widget.Toast;
 
 import com.jinwang.jianwutong.R;
+import com.jinwang.jianwutong.ToastMsg;
 import com.jinwang.jianwutong.activity.MainActivity;
+import com.jinwang.jianwutong.chat.ChatParams;
 import com.jinwang.jianwutong.chat.DateTimeUtil;
 import com.jinwang.jianwutong.chat.Params;
 import com.jinwang.jianwutong.chat.Util;
 import com.jinwang.jianwutong.chat.receiver.TickAlarmReceiver;
+import com.jinwang.jianwutong.util.PreferenceUtil;
 
 import org.ddpush.im.v1.client.appuser.Message;
 import org.ddpush.im.v1.client.appuser.UDPClientBase;
@@ -59,11 +62,15 @@ public class OnlineService extends Service {
 		@Override
 		public void onPushMessage(Message message) {
 			if(message == null){
+				ToastMsg.showToast("empty msg");
 				return;
 			}
 			if(message.getData() == null || message.getData().length == 0){
+				ToastMsg.showToast("empty time");
 				return;
 			}
+
+			//用不到，直接收发自定义消息
 			if(message.getCmd() == 16){// 0x10 通用推送信息
 				notifyUser(16,"DDPush通用推送信息","时间："+ DateTimeUtil.getCurDateTime(),"收到通用推送信息");
 			}
@@ -71,6 +78,7 @@ public class OnlineService extends Service {
 				long msg = ByteBuffer.wrap(message.getData(), 5, 8).getLong();
 				notifyUser(17,"DDPush分组推送信息",""+msg,"收到通用推送信息");
 			}
+			//用不到，直接收自定义消息end
 			if(message.getCmd() == 32){// 0x20 自定义推送信息
 				String str = null;
 				try{
@@ -78,6 +86,7 @@ public class OnlineService extends Service {
 				}catch(Exception e){
 					str = Util.convert(message.getData(),5,message.getContentLength());
 				}
+				//ToastMsg.showToast(str);
 				notifyUser(32,"DDPush自定义推送信息",""+str,"收到自定义推送信息");
 			}
 			setPkgsInfo();
@@ -98,7 +107,7 @@ public class OnlineService extends Service {
 		
 		resetClient();
 		
-		notifyRunning();
+		//notifyRunning();
 	}
 
 	@Override
@@ -132,7 +141,10 @@ public class OnlineService extends Service {
 
 		return START_STICKY;
 	}
-	
+
+	/**
+	 * 收包发包数更新
+	 */
 	protected void setPkgsInfo(){
 		if(this.myUdpClient == null){
 			return;
@@ -147,11 +159,11 @@ public class OnlineService extends Service {
 	}
 	
 	protected void resetClient(){
-		SharedPreferences account = this.getSharedPreferences(Params.DEFAULT_PRE_NAME, Context.MODE_PRIVATE);
-		String serverIp = account.getString(Params.SERVER_IP, "");
-		String serverPort = account.getString(Params.SERVER_PORT, "");
-		String pushPort = account.getString(Params.PUSH_PORT, "");
-		String userName = account.getString(Params.USER_NAME, "");
+		//SharedPreferences account = this.getSharedPreferences(Params.DEFAULT_PRE_NAME, Context.MODE_PRIVATE);
+		String serverIp = ChatParams.SERVER_IP;
+		String serverPort = ChatParams.SERVER_PORT;
+		String pushPort = ChatParams.PUSH_PORT;
+		String userName = PreferenceUtil.getName(getApplicationContext());
 		if(serverIp == null || serverIp.trim().length() == 0
 				|| serverPort == null || serverPort.trim().length() == 0
 				|| pushPort == null || pushPort.trim().length() == 0
@@ -165,10 +177,10 @@ public class OnlineService extends Service {
 			myUdpClient = new MyUdpClient(Util.md5Byte(userName), 1, serverIp, Integer.parseInt(serverPort));
 			myUdpClient.setHeartbeatInterval(50);
 			myUdpClient.start();
-			SharedPreferences.Editor editor = account.edit();
+			/*SharedPreferences.Editor editor = account.edit();
 			editor.putString(Params.SENT_PKGS, "0");
 			editor.putString(Params.RECEIVE_PKGS, "0");
-			editor.commit();
+			editor.commit();*/
 		}catch(Exception e){
 			Toast.makeText(this.getApplicationContext(), "操作失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
 		}
@@ -180,7 +192,10 @@ public class OnlineService extends Service {
 			wakeLock.release();
 		}
 	}
-	
+
+	/**
+	 * 定时任务 每隔5分钟触发发一次广播TickAlarmReceiver
+	 */
 	protected void setTickAlarm(){
 		AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this,TickAlarmReceiver.class);
@@ -248,8 +263,6 @@ public class OnlineService extends Service {
 		Notification n = new Notification();
 		Intent intent = new Intent(this,MainActivity.class);
 		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-
 		/*n.contentIntent = pi;
 
 		n.setLatestEventInfo(this, title, content, pi);*/
@@ -266,8 +279,8 @@ public class OnlineService extends Service {
 
 			Notification.Builder builder = new Notification.Builder(getApplicationContext());
 			builder.setContentIntent(pi)
-					.setContentTitle("DDPushDemoUdp")//标题
-					.setContentText("正在运行")//内容
+					.setContentTitle(title)//标题
+					.setContentText(content)//内容
 					.setAutoCancel(true)//设置可以清除
 					.build();
 			n = builder.getNotification();

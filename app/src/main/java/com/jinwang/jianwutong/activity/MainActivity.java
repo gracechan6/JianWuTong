@@ -203,7 +203,7 @@ public class MainActivity extends WebviewActivity {
         msgEntity.setBranch("江东");
         msgEntity.setLatestMsg("嗯 好的");
         msgEntity.setLatestTime("20分钟前");
-        msgEntity.setName("刘小东");
+        msgEntity.setName("我");
         msgEntity.setUnread(2);
         msgsLists.add(msgEntity);
 

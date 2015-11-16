@@ -48,6 +48,7 @@
         <service android:name=".chat.service.OnlineService"/>
         <receiver android:name=".chat.receiver.TickAlarmReceiver"/>
 
+
     </application>
 
 </manifest>
