@@ -14,32 +14,32 @@
         <RadioButton
             android:id="@+id/index"
             style="@style/BottomRadioButton"
-            android:text="@string/index"
+            android:msg="@string/index"
             android:drawableTop="@drawable/bottom_radiobtn_index_icon_select"
             android:checked="true"/>
 
         <RadioButton
             android:id="@+id/message"
             style="@style/BottomRadioButton"
-            android:text="@string/message"
+            android:msg="@string/message"
             android:drawableTop="@drawable/bottom_radiobtn_mes_icon_select"/>
 
         <RadioButton
             android:id="@+id/contacts"
             style="@style/BottomRadioButton"
-            android:text="@string/contacts"
+            android:msg="@string/contacts"
             android:drawableTop="@drawable/bottom_radiobtn_contacts_icon_select"/>
 
         <RadioButton
             android:id="@+id/task"
             style="@style/BottomRadioButton"
-            android:text="@string/task"
+            android:msg="@string/task"
             android:drawableTop="@drawable/bottom_radiobtn_task_icon_select"/>
 
         <RadioButton
             android:id="@+id/me"
             style="@style/BottomRadioButton"
-            android:text="@string/me"
+            android:msg="@string/me"
             android:drawableTop="@drawable/bottom_radiobtn_me_icon_select"/>
     </RadioGroup>
 
@@ -48,7 +48,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="@drawable/bgred_circle"
-        android:text="99+"
+        android:msg="99+"
         android:textSize="10sp"
         android:textColor="@color/white"
         android:gravity="center"

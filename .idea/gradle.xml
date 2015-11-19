@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core-dataparser-1.0.0-SNAPSHOT" />
             <option value="$PROJECT_DIR$/swipemenulv-1.3.0" />
             <option value="$PROJECT_DIR$/ui-base" />
           </set>

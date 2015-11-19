@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JianWuTong.iml" filepath="$PROJECT_DIR$/JianWuTong.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core-dataparser-1.0.0-SNAPSHOT/core-dataparser-1.0.0-SNAPSHOT.iml" filepath="$PROJECT_DIR$/core-dataparser-1.0.0-SNAPSHOT/core-dataparser-1.0.0-SNAPSHOT.iml" />
       <module fileurl="file://$PROJECT_DIR$/swipemenulv-1.3.0/swipemenulv-1.3.0.iml" filepath="$PROJECT_DIR$/swipemenulv-1.3.0/swipemenulv-1.3.0.iml" />
       <module fileurl="file://$PROJECT_DIR$/ui-base/ui-base.iml" filepath="$PROJECT_DIR$/ui-base/ui-base.iml" />
     </modules>

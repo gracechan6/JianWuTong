@@ -1,29 +1,33 @@
 package com.jinwang.jianwutong.chat;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.jinwang.jianwutong.DateTransform;
 import com.jinwang.jianwutong.R;
+import com.jinwang.jianwutong.ToastMsg;
 import com.jinwang.jianwutong.activity.MainActivity;
 import com.jinwang.jianwutong.chat.adapter.ChatAdapter;
 import com.jinwang.jianwutong.chat.entity.ChatEntity;
+import com.jinwang.jianwutong.chat.entity.PushEntity;
 import com.jinwang.jianwutong.chat.service.OnlineService;
 import com.jinwang.jianwutong.fragment.ToolbarFragment;
 import com.jinwang.jianwutong.util.LogUtil;
 import com.jinwang.jianwutong.util.PreferenceUtil;
+import com.jinwangmobile.core.dataparser.json.AbsJSONUtils;
 
 import org.ddpush.im.v1.client.appserver.Pusher;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,7 @@ import java.util.List;
 public class ChatActivity extends Activity {
 
     public static final String RIGHT_HISDETAIL="RIGHT_HISDETAIL";
+    public static final String NEW_MESSAGE_RECV="NEW_MESSAGE_RECV";
 
     private ToolbarFragment toolbarFragment;
 
@@ -45,32 +50,37 @@ public class ChatActivity extends Activity {
 
     /*ddpush  params*/
     private Intent startSrv;
-    /*private Handler handler;
-    private Runnable refresher;*/
+    private IntentFilter mFilter = new IntentFilter();
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
-
-    protected void start() {
-        super.onStart();
-       // PreferenceUtil.saveChatInfo(getApplicationContext());
-        startSrv=new Intent(this,OnlineService.class);
-        startSrv.putExtra("CMD", "RESET");
-        this.startService(startSrv);
-        //freshCurrentInfo();
-    }
+            if (action.equals(NEW_MESSAGE_RECV)){
+                //聊天界面是否开启，未读消息数+1
+                if (intent.getStringExtra("Sender").equals(hisName)){
+                    List<ChatEntity> mList=ChatModel.querySenderChatMeg(getApplicationContext(),hisName);
+                    chatLists.clear();
+                    chatLists.addAll(mList);
+                    chatAdapter.notifyDataSetChanged();
+                    chatlsv.setSelection(chatlsv.getCount() - 1);
+                }
+                else {
+                    ToastMsg.showToast("您有新的消息，请注意查收。");
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*refresher = new Runnable(){
-            public void run(){
-                ChatActivity.this.freshCurrentInfo();
-            }
-        };
-        handler = new Handler();
-        handler.postDelayed(refresher, 1000);*/
+        //添加广播
+        /*IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction(NEW_MESSAGE_RECV);
+        this.registerReceiver(mReceiver,intentFilter);*/
 
         setContentView(R.layout.activity_chat);
-        //start();
         hisName=getIntent().getStringExtra(MainActivity.HISNAME);
         toolbarFragment = (ToolbarFragment) getFragmentManager().findFragmentById(R.id.toolbarFragment);
         toolbarFragment.initToolBar();
@@ -83,16 +93,18 @@ public class ChatActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
-        //freshCurrentInfo();
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+        mFilter.addAction(NEW_MESSAGE_RECV);
+        registerReceiver(mReceiver,mFilter);
     }
 
     @Override
-    protected void onDestroy() {
-        //handler.removeCallbacks(refresher);
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mReceiver);
     }
+
 
     /**
      * 发送消息
@@ -100,8 +112,8 @@ public class ChatActivity extends Activity {
      */
     public void doSend(View view){
 
-        String text = sendtext.getText().toString();
-        if (text.length()==0) {
+        String sendData = sendtext.getText().toString();
+        if (sendData.length()==0) {
             sendtext.requestFocus();
             return;//未输入内容点击发送，不操作直接返回。
         }
@@ -122,40 +134,49 @@ public class ChatActivity extends Activity {
             //对方名字有误 无法转换
             return;
         }
+
+        //以json格式传送消息
+        String jsonResult = null;
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("from", PreferenceUtil.getName(getApplicationContext()));
+            jsonObject.put("to",hisName);
+            jsonObject.put("text",sendData);
+            //json转成字符串格式
+            jsonResult = jsonObject.toString();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
         byte[] msg = null;
         try {
-            msg = text.getBytes("UTF-8");
+            msg = jsonResult.getBytes("UTF-8");
         } catch (Exception e) {
             Toast.makeText(this.getApplicationContext(), "错误："+e.getMessage(), Toast.LENGTH_SHORT).show();
             sendtext.requestFocus();
             return;
         }
 
+        /*把消息存储到数据库,更新现有list*/
+        try {
+            PushEntity entity= AbsJSONUtils.defaultInstance().JSON2Object(msg,PushEntity.class);
+            ChatModel.save2DB(getApplicationContext(),entity);
+            ChatEntity centity=new ChatEntity(entity.getFrom(),entity.getTo(),entity.getText(),DateTransform.getStringNowDate());
+            chatLists.add(centity);
+            chatAdapter.notifyDataSetChanged();
+            chatlsv.setSelection(chatlsv.getCount()-1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         //推送消息
         new Thread(new DdPushSendTask(this,ChatParams.SERVER_IP,port,uuid,msg)).start();
     }
 
-    protected void freshCurrentInfo(){
-
-        String uuid = null;
-        String userName=PreferenceUtil.getName(getApplicationContext());
-
-        try {
-            uuid=Util.md5(userName);
-        } catch (Exception e) {
-            uuid="";
-        }
-        if(userName == null || userName.length() == 0){
-            uuid="";
-        }
-
-        LogUtil.i("ddpush-me",userName+"!!!"+uuid);
-        //刷新界面
-        /*try {
-            this.findViewById(R.layout.activity_chat).postInvalidate();
-        }catch (Exception e){}*/
-    }
-
+    /**
+     * 加载历史消息，（显示定量，下拉刷新--未实现）
+     */
     protected void initChatList(){
         if(chatlsv == null){
             chatlsv = (ListView) findViewById(R.id.chatlsv);
@@ -163,15 +184,12 @@ public class ChatActivity extends Activity {
             chatAdapter = new ChatAdapter(this,getApplicationContext(),chatLists);
             chatlsv.setAdapter(chatAdapter);
         }
-        //time格式：yyyy年MM月dd日 HH:MM
-        chatEntity = new ChatEntity("龚华枫","我是龚华枫！", "2013年11月02日,周一,09:45");
-        chatLists.add(chatEntity);
-        chatEntity = new ChatEntity("龚华枫","明天开会，时间地点你安排下。", "2015年11月02日,周一,02:49");
-        chatLists.add(chatEntity);
-        chatEntity = new ChatEntity("我","好的，安排到第一会议室，下午13点开始。", DateTransform.getStringNowDate());
-        chatLists.add(chatEntity);
+        chatLists.addAll(ChatModel.querySenderChatMeg(getApplicationContext(), hisName));
     }
 
+    /**
+     * 发送消息  线程
+     */
     class DdPushSendTask implements Runnable{
         private Context context;
         private String serverIp;

@@ -17,6 +17,7 @@ import com.jinwang.jianwutong.R;
 import com.jinwang.jianwutong.chat.ChatActivity;
 import com.jinwang.jianwutong.chat.adapter.MsgAdapter;
 import com.jinwang.jianwutong.chat.entity.MsgEntity;
+import com.jinwang.jianwutong.chat.service.OnlineService;
 import com.jinwang.jianwutong.fragment.BottomFragment;
 import com.jinwang.jianwutong.util.PhoneScreenUtils;
 
@@ -48,6 +49,16 @@ public class MainActivity extends WebviewActivity {
     /*消息列表进入聊天界面参数*/
     public static final String HISNAME="HISNAME";
 
+    /**
+     * DDPUSH 终端重置
+     */
+    protected void startDDPush() {
+        super.onStart();
+        Intent startSrv=new Intent(this,OnlineService.class);
+        startSrv.putExtra("CMD", "RESET");
+        this.startService(startSrv);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +71,7 @@ public class MainActivity extends WebviewActivity {
         toolbarFragment.setTitle(getString(R.string.app_name));
         toolbarFragment.setRightOfToolbar("公告管理", null, "SAD");*/
 
+        startDDPush();
         initToolBar();
         setTitle(getString(R.string.app_name));
         setRightOfToolbar("公告管理", null, "SAD");

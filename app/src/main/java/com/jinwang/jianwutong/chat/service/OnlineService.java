@@ -1,6 +1,5 @@
 package com.jinwang.jianwutong.chat.service;
 
-import android.animation.AnimatorSet;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,9 +8,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -20,16 +16,20 @@ import android.widget.Toast;
 import com.jinwang.jianwutong.R;
 import com.jinwang.jianwutong.ToastMsg;
 import com.jinwang.jianwutong.activity.MainActivity;
+import com.jinwang.jianwutong.chat.ChatActivity;
 import com.jinwang.jianwutong.chat.ChatParams;
 import com.jinwang.jianwutong.chat.DateTimeUtil;
 import com.jinwang.jianwutong.chat.Params;
 import com.jinwang.jianwutong.chat.Util;
+import com.jinwang.jianwutong.chat.entity.PushEntity;
 import com.jinwang.jianwutong.chat.receiver.TickAlarmReceiver;
 import com.jinwang.jianwutong.util.PreferenceUtil;
+import com.jinwangmobile.core.dataparser.json.AbsJSONUtils;
 
 import org.ddpush.im.v1.client.appuser.Message;
 import org.ddpush.im.v1.client.appuser.UDPClientBase;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class OnlineService extends Service {
@@ -45,7 +45,6 @@ public class OnlineService extends Service {
 		public MyUdpClient(byte[] uuid, int appid, String serverAddr, int serverPort)
 				throws Exception {
 			super(uuid, appid, serverAddr, serverPort);
-
 		}
 
 		@Override
@@ -70,7 +69,7 @@ public class OnlineService extends Service {
 				return;
 			}
 
-			//用不到，直接收发自定义消息
+			//用不到，直接收自定义消息
 			if(message.getCmd() == 16){// 0x10 通用推送信息
 				notifyUser(16,"DDPush通用推送信息","时间："+ DateTimeUtil.getCurDateTime(),"收到通用推送信息");
 			}
@@ -87,7 +86,7 @@ public class OnlineService extends Service {
 					str = Util.convert(message.getData(),5,message.getContentLength());
 				}
 				//ToastMsg.showToast(str);
-				notifyUser(32,"DDPush自定义推送信息",""+str,"收到自定义推送信息");
+				notifyUser(32, "DDPush自定义推送信息", "" + str, "收到自定义推送信息");
 			}
 			setPkgsInfo();
 		}
@@ -184,7 +183,7 @@ public class OnlineService extends Service {
 		}catch(Exception e){
 			Toast.makeText(this.getApplicationContext(), "操作失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
 		}
-		Toast.makeText(this.getApplicationContext(), "ddpush：终端重置", Toast.LENGTH_LONG).show();
+		//Toast.makeText(this.getApplicationContext(), "ddpush：终端重置", Toast.LENGTH_LONG).show();
 	}
 	
 	protected void tryReleaseWakeLock(){
@@ -258,11 +257,28 @@ public class OnlineService extends Service {
 		notificationManager.cancel(0);
 	}
 	
-	public void notifyUser(int id, String title, String content, String tickerText){
-		NotificationManager notificationManager=(NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
+	public void notifyUser(int id, String title, String msg, String tickerText){
+		PushEntity entity = null;
+		try {
+			entity = AbsJSONUtils.defaultInstance().JSON2Object(msg,PushEntity.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		/*新消息存储到数据库*/
+
+
+		/*发送广播*/
+		Intent intent=new Intent();
+		intent.setAction(ChatActivity.NEW_MESSAGE_RECV);
+		intent.putExtra("Sender",entity.getFrom());
+		sendBroadcast(intent);
+
+		/*NotificationManager notificationManager=(NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification n = new Notification();
 		Intent intent = new Intent(this,MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);*/
+
 		/*n.contentIntent = pi;
 
 		n.setLatestEventInfo(this, title, content, pi);*/
@@ -275,18 +291,17 @@ public class OnlineService extends Service {
 			//此方法高版本已经弃用使用Notification.Builder instead!
 			//n.setLatestEventInfo(this, "DDPushDemoUDP", "正在运行", pi);
 
-		}*/
+		}
+		//本项目最低版本为14，因此不存在该问题
+		*/
 
-			Notification.Builder builder = new Notification.Builder(getApplicationContext());
-			builder.setContentIntent(pi)
-					.setContentTitle(title)//标题
-					.setContentText(content)//内容
-					.setAutoCancel(true)//设置可以清除
-					.build();
-			n = builder.getNotification();
-
-
-
+		/*Notification.Builder builder = new Notification.Builder(getApplicationContext());
+		builder.setContentIntent(pi)
+				.setContentTitle(title)//标题
+				.setContentText(content)//内容
+				.setAutoCancel(true)//设置可以清除
+				.build();
+		n = builder.getNotification();
 		//added end
 
 		n.defaults = Notification.DEFAULT_ALL;
@@ -296,14 +311,14 @@ public class OnlineService extends Service {
 		n.icon = R.drawable.ic_launcher;  
 		n.when = System.currentTimeMillis();
 		n.tickerText = tickerText;
-		notificationManager.notify(id, n);
+		notificationManager.notify(id, n);*/
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		//this.cancelTickAlarm();
-		cancelNotifyRunning();
+		//cancelNotifyRunning();
 		this.tryReleaseWakeLock();
 	}
 	

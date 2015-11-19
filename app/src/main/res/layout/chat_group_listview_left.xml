@@ -23,7 +23,7 @@
         android:layout_toRightOf="@id/head"
         android:layout_marginTop="5dp"
         android:textSize="18sp"
-        android:text="龚华枫"/>
+        android:msg="龚华枫"/>
     
     <TextView
         android:layout_width="wrap_content"
@@ -31,5 +31,5 @@
         android:layout_below="@id/hisName"
         android:layout_toRightOf="@id/head"
         android:background="@drawable/chat_left"
-        android:text="今晚球赛大家加油"/>
+        android:msg="今晚球赛大家加油"/>
 </RelativeLayout>

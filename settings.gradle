@@ -1,1 +1,1 @@
-include ':app', ':ui-base', ':swipemenulv-1.3.0'
+include ':app', ':ui-base', ':swipemenulv-1.3.0', ':core-dataparser-1.0.0-SNAPSHOT'

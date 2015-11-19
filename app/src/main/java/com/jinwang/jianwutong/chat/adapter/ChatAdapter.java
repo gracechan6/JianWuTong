@@ -96,8 +96,8 @@ public class ChatAdapter extends BaseAdapter {
         }
 
         /*消息内容分开处理显示左侧还是右侧*/
-        if (chatEntity.getName().equals(PreferenceUtil.getName(context))){
-            viewHolder.myText.setText(chatEntity.getText());
+        if (chatEntity.getFrom().equals(PreferenceUtil.getName(context))){
+            viewHolder.myText.setText(chatEntity.getMsg());
             viewHolder.myText.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -110,7 +110,7 @@ public class ChatAdapter extends BaseAdapter {
             showRight();
         }
         else {
-            viewHolder.hisText.setText(chatEntity.getText());
+            viewHolder.hisText.setText(chatEntity.getMsg());
             viewHolder.hisText.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -198,7 +198,7 @@ public class ChatAdapter extends BaseAdapter {
                     tv.setTextColor(0xff00CD66);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {// 松开
                     tv.setTextColor(0xffffffff);
-                    TextManager.copyText(mContext, lists.get(mPosition).getText());
+                    TextManager.copyText(mContext, lists.get(mPosition).getMsg());
                     ToastMsg.showToast("复制成功");
 
                     if (popupWindow != null) {

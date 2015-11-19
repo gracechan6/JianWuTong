@@ -1,6 +1,5 @@
 package com.jinwang.jianwutong;
 
-import android.app.ListActivity;
 import android.widget.Toast;
 
 /**

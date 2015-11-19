@@ -10,7 +10,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:textColor="@color/chat_time"
-        android:text="10月09日，周五，22:20"
+        android:msg="10月09日，周五，22:20"
         android:visibility="gone"/>
     <TextView
         android:id="@+id/hisText"
@@ -21,7 +21,7 @@
         android:layout_marginLeft="5dp"
         android:layout_alignParentLeft="true"
         android:background="@drawable/chat_left"
-        android:text="下午的会议你安排一下"
+        android:msg="下午的会议你安排一下"
         android:textColor="#000"
         android:visibility="gone"/>
     <TextView
@@ -33,7 +33,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/time"
         android:background="@drawable/chat_right"
-        android:text="安排到下午三点吧,在第三会议室。"
+        android:msg="安排到下午三点吧,在第三会议室。"
         android:textColor="#fff"
         android:visibility="gone"/>
 </RelativeLayout>

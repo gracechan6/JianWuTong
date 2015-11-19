@@ -59,7 +59,7 @@
             android:layout_height="match_parent"
             android:textColor="@color/white"
             android:background="@drawable/btn_send_status"
-            android:text="@string/btn_send"
+            android:msg="@string/btn_send"
             android:clickable="true"
             android:onClick="doSend"/>
 

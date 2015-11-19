@@ -4,11 +4,32 @@ package com.jinwang.jianwutong.chat.entity;
  * Created by Chenss on 2015/10/22.
  */
 public class MsgEntity {
+    private Integer id;
     private String name;
     private String latestMsg;
     private int unread;
     private String latestTime;
     private String branch;
+
+    public MsgEntity() {
+    }
+
+    public MsgEntity(Integer id, String name, String latestMsg, String latestTime, int unread,String branch) {
+        this.branch = branch;
+        this.id = id;
+        this.latestMsg = latestMsg;
+        this.latestTime = latestTime;
+        this.name = name;
+        this.unread = unread;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getBranch() {
         return branch;

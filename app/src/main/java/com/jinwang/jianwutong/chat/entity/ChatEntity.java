@@ -4,31 +4,53 @@ package com.jinwang.jianwutong.chat.entity;
  * Created by Chenss on 2015/10/27.
  */
 public class ChatEntity {
-    private String name;
-    private String text;
+    private Integer id;
+    private String from;
+    private String to;
+    private String msg;
     private String time;
 
+    public ChatEntity(){
 
-    public ChatEntity(String name, String text, String time) {
-        this.name = name;
-        this.text = text;
+    }
+
+
+    public ChatEntity(int id,String from,String to, String msg, String time) {
+        this.from = from;
+        this.to = to;
+        this.msg = msg;
         this.time = time;
     }
 
-    public String getName() {
-        return name;
+    public Integer getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getFrom() {
+        return from;
     }
 
-    public String getText() {
-        return text;
+    public void setFrom(String from) {
+        this.from = from;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getTime() {
