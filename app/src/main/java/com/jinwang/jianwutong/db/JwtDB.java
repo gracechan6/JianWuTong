@@ -29,8 +29,8 @@ public class JwtDB {
      * 字段
      */
     public final String COLUMN_ID="id";
-    public final String COLUMN_FROM="FROM";
-    public final String COLUMN_TO="to";
+    public final String COLUMN_SENDER ="sender";
+    public final String COLUMN_Receiver ="receiver";
     public final String COLUMN_MSG="msg";
     public final String COLUMN_TIME="time";
     public final String COLUMN_NAME="name";
@@ -144,7 +144,7 @@ public class JwtDB {
      * @return
      */
     public Boolean delMsg(MsgEntity entity){
-        if (db.delete(TABLE_MSG,COLUMN_ID,new String[]{String.valueOf(entity.getId())})>0)
+        if (db.delete(TABLE_MSG,COLUMN_ID+"=?",new String[]{String.valueOf(entity.getId())})>0)
             return true;
         return false;
     }
@@ -190,16 +190,18 @@ public class JwtDB {
         ArrayList<ChatEntity> chatList=new ArrayList<>();
         ChatEntity entity;
         //sql语句暂时还不确定是否正确
-        String select="select top(10) from " +
-                "(select top(10) from "+TABLE_CHAT+" where "+COLUMN_FROM+" ="+hisName+" )a"+
-                "(select top(10) from "+TABLE_CHAT+" where "+COLUMN_TO+" ="+hisName+" )b " +
-                "group by a.id order by id desc";
-        Cursor cursor=db.rawQuery("select top(10) from "+TABLE_CHAT+" where "+COLUMN_FROM+"order by id desc",null);
+        /*String select="select top 10 from " +
+                "(select * from "+TABLE_CHAT+" where "+COLUMN_SENDER+"="+hisName+" order by id desc limit 0,10 )a"+
+                "(select * from "+TABLE_CHAT+" where "+COLUMN_Receiver+"="+hisName+" order by id desc limit 0,10 )b " +
+                "group by a.id order by id desc";*/
+        Cursor cursor=db.rawQuery("select * from "+TABLE_CHAT+" where "+ COLUMN_SENDER +"='"+hisName
+                +"' or "+ COLUMN_Receiver +"='"+hisName
+                +"' order by id desc limit 0,10",null);
         if (cursor.moveToFirst()){
             do {
                 entity = new ChatEntity(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_FROM)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_TO)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_SENDER)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_Receiver)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_MSG)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_TIME)));
                 chatList.add(entity);
@@ -215,26 +217,25 @@ public class JwtDB {
      * @return
      */
     public Boolean delChat(ChatEntity entity){
-        if (db.delete(TABLE_CHAT,COLUMN_ID,new String[]{String.valueOf(entity.getId())})>0)
+        //db.execSQL("delete from "+TABLE_CHAT+" where id="+entity.getId());
+        if (db.delete(TABLE_CHAT,COLUMN_ID+"=?",new String[]{String.valueOf(entity.getId())})>0)
             return true;
         return false;
     }
 
     /**
-     * 有新的消息收到或发出
+     * 有新的消息收到或发出,存到数据库
      * @param entity
      * @return
      */
     public Boolean insertChat(ChatEntity entity){
         ContentValues values =new ContentValues();
-        values.put(COLUMN_FROM,entity.getFrom());
-        values.put(COLUMN_TO,entity.getTo());
+        values.put(COLUMN_SENDER,entity.getSender());
+        values.put(COLUMN_Receiver,entity.getReceiver());
         values.put(COLUMN_MSG,entity.getMsg());
         values.put(COLUMN_TIME,entity.getTime());
         if (db.insert(TABLE_CHAT,null,values)>0)
             return true;
         return false;
     }
-
-
 }

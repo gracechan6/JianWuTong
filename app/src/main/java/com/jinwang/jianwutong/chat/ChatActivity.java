@@ -59,7 +59,7 @@ public class ChatActivity extends Activity {
             if (action.equals(NEW_MESSAGE_RECV)){
                 //聊天界面是否开启，未读消息数+1
                 if (intent.getStringExtra("Sender").equals(hisName)){
-                    List<ChatEntity> mList=ChatModel.querySenderChatMeg(getApplicationContext(),hisName);
+                    List<ChatEntity> mList=ChatModel.querySenderChat(hisName,10);
                     chatLists.clear();
                     chatLists.addAll(mList);
                     chatAdapter.notifyDataSetChanged();
@@ -160,15 +160,15 @@ public class ChatActivity extends Activity {
         /*把消息存储到数据库,更新现有list*/
         try {
             PushEntity entity= AbsJSONUtils.defaultInstance().JSON2Object(msg,PushEntity.class);
-            ChatModel.save2DB(getApplicationContext(),entity);
+            ChatModel.save2DBChat(entity);
             ChatEntity centity=new ChatEntity(entity.getFrom(),entity.getTo(),entity.getText(),DateTransform.getStringNowDate());
             chatLists.add(centity);
             chatAdapter.notifyDataSetChanged();
             chatlsv.setSelection(chatlsv.getCount()-1);
+            sendtext.setText("");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         //推送消息
         new Thread(new DdPushSendTask(this,ChatParams.SERVER_IP,port,uuid,msg)).start();
@@ -184,7 +184,7 @@ public class ChatActivity extends Activity {
             chatAdapter = new ChatAdapter(this,getApplicationContext(),chatLists);
             chatlsv.setAdapter(chatAdapter);
         }
-        chatLists.addAll(ChatModel.querySenderChatMeg(getApplicationContext(), hisName));
+        chatLists.addAll(ChatModel.querySenderChat( hisName,10));
     }
 
     /**

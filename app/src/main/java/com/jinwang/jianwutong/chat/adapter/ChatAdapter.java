@@ -17,7 +17,9 @@ import com.jinwang.jianwutong.DateTransform;
 import com.jinwang.jianwutong.R;
 import com.jinwang.jianwutong.TextManager;
 import com.jinwang.jianwutong.ToastMsg;
+import com.jinwang.jianwutong.chat.ChatModel;
 import com.jinwang.jianwutong.chat.entity.ChatEntity;
+import com.jinwang.jianwutong.db.JwtDB;
 import com.jinwang.jianwutong.util.PreferenceUtil;
 
 import java.util.Date;
@@ -96,7 +98,7 @@ public class ChatAdapter extends BaseAdapter {
         }
 
         /*消息内容分开处理显示左侧还是右侧*/
-        if (chatEntity.getFrom().equals(PreferenceUtil.getName(context))){
+        if (chatEntity.getSender().equals(PreferenceUtil.getName(context))){
             viewHolder.myText.setText(chatEntity.getMsg());
             viewHolder.myText.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -234,9 +236,12 @@ public class ChatAdapter extends BaseAdapter {
             @Override
             public void onItemClick(int itemPosition) {
                 if (itemPosition == 0) {
-                    lists.remove(mPosition);
-                    notifyDataSetChanged();
-                    ToastMsg.showToast("删除成功");
+                    if (ChatModel.delDBChat(lists.get(mPosition))) {
+                        lists.remove(mPosition);
+                        notifyDataSetChanged();
+                        ToastMsg.showToast("删除成功");
+                    }else
+                        ToastMsg.showToast("很抱歉，未能成功删除，请稍后再试。\n也可能已经删除成功，请重新打开软件再次查看！");
                 }
             }
         };

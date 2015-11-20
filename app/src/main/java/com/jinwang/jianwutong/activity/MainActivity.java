@@ -25,10 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
-/**
- *
- */
 public class MainActivity extends WebviewActivity {
 
     private RadioGroup radioGroup;
@@ -236,7 +232,6 @@ public class MainActivity extends WebviewActivity {
         }
 
         //msgAdapter = new MsgAdapter(getApplicationContext(),msgsLists);
-
         //msgsLsv.setAdapter(msgAdapter);
 
         //显示消息列表

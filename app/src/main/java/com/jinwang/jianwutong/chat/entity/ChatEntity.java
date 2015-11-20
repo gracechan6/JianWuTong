@@ -5,8 +5,8 @@ package com.jinwang.jianwutong.chat.entity;
  */
 public class ChatEntity {
     private Integer id;
-    private String from;
-    private String to;
+    private String sender;
+    private String receiver;
     private String msg;
     private String time;
 
@@ -15,9 +15,17 @@ public class ChatEntity {
     }
 
 
-    public ChatEntity(int id,String from,String to, String msg, String time) {
-        this.from = from;
-        this.to = to;
+    public ChatEntity(int id,String sender,String to, String msg, String time) {
+        this.id = id;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.msg = msg;
+        this.time = time;
+    }
+
+    public ChatEntity(String sender,String receiver, String msg, String time) {
+        this.sender = sender;
+        this.receiver = receiver;
         this.msg = msg;
         this.time = time;
     }
@@ -29,20 +37,20 @@ public class ChatEntity {
     public void setId(Integer id) {
         this.id = id;
     }
-    public String getFrom() {
-        return from;
+    public String getSender() {
+        return sender;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public String getTo() {
-        return to;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public String getMsg() {

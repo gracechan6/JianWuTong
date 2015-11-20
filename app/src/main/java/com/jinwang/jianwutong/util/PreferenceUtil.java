@@ -25,7 +25,7 @@ public class PreferenceUtil {
 
     public static String getName(Context context){
         SharedPreferences sp=context.getSharedPreferences(PREFERENCE,Context.MODE_PRIVATE);
-        return sp.getString(PREFERENCE_NAME,"于迪");
+        return sp.getString(PREFERENCE_NAME,"我");
     }
 
 }

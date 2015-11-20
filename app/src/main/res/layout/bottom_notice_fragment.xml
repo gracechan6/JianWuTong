@@ -14,26 +14,26 @@
         <RadioButton
             android:id="@+id/posted"
             style="@style/BottomRadioButton"
-            android:msg="@string/notice_posted"
+            android:text="@string/notice_posted"
             android:drawableTop="@drawable/bottom_notice_radiobtn_posted_icon_select"
             android:checked="true"/>
 
         <RadioButton
             android:id="@+id/unpost"
             style="@style/BottomRadioButton"
-            android:msg="@string/notice_unpost"
+            android:text="@string/notice_unpost"
             android:drawableTop="@drawable/bottom_notice_radiobtn_unpost_icon_select"/>
 
         <RadioButton
             android:id="@+id/undone"
             style="@style/BottomRadioButton"
-            android:msg="@string/notice_undone"
+            android:text="@string/notice_undone"
             android:drawableTop="@drawable/bottom_notice_radiobtn_undone_icon_select"/>
 
         <RadioButton
             android:id="@+id/expired"
             style="@style/BottomRadioButton"
-            android:msg="@string/notice_expired"
+            android:text="@string/notice_expired"
             android:drawableTop="@drawable/bottom_notice_radiobtn_expired_icon_select"/>
 
     </RadioGroup>

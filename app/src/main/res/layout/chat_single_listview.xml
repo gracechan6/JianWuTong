@@ -10,7 +10,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:textColor="@color/chat_time"
-        android:msg="10月09日，周五，22:20"
+        android:text="10月09日，周五，22:20"
         android:visibility="gone"/>
     <TextView
         android:id="@+id/hisText"
@@ -19,21 +19,23 @@
         android:layout_below="@id/time"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="30dp"
         android:layout_alignParentLeft="true"
         android:background="@drawable/chat_left"
-        android:msg="下午的会议你安排一下"
+        android:text="下午的会议你安排一下"
         android:textColor="#000"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
     <TextView
         android:id="@+id/myText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
+        android:layout_marginLeft="30dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/time"
         android:background="@drawable/chat_right"
-        android:msg="安排到下午三点吧,在第三会议室。"
+        android:text="安排到下午三点吧,在第三会议室。"
         android:textColor="#fff"
         android:visibility="gone"/>
 </RelativeLayout>

@@ -23,6 +23,14 @@ public class MsgEntity {
         this.unread = unread;
     }
 
+    public MsgEntity( String name, String latestMsg, String latestTime, int unread,String branch) {
+        this.branch = branch;
+        this.latestMsg = latestMsg;
+        this.latestTime = latestTime;
+        this.name = name;
+        this.unread = unread;
+    }
+
     public Integer getId() {
         return id;
     }
